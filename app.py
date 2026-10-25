@@ -13,63 +13,59 @@ st.set_page_config(
     layout="wide"
 )
 
-# Karanlık Mod ile %100 Uyumlu, Yüksek Kontrastlı CSS
+# Hem Açık (Light) Hem Koyu (Dark) Temada Mükemmel Görünen Akıllı CSS
 st.markdown("""
     <style>
-    /* Başlıklar */
-    .main-title {font-size: 30px; font-weight: bold; color: #4ade80; text-align: center; margin-bottom: 5px;}
-    .sub-title {font-size: 15px; color: #9ca3af; text-align: center; margin-bottom: 25px;}
+    .main-title {font-size: 28px; font-weight: bold; color: #16a34a; text-align: center; margin-bottom: 5px;}
+    .sub-title {font-size: 15px; opacity: 0.8; text-align: center; margin-bottom: 25px;}
     
-    /* Görsel Boyut Sınırlayıcı (Devasa Görselleri Önler) */
+    /* İdeal Görsel Boyutlandırması */
     [data-testid="stImage"] img {
-        max-height: 400px !important;
+        max-height: 520px !important;
+        width: auto !important;
         object-fit: contain !important;
-        border-radius: 10px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         margin: 0 auto;
         display: block;
     }
     
-    /* Kırmızı Alarm Kartı (Halkalı Leke) */
+    /* Akıllı Kartlar: rgba ile her iki temaya tam uyum sağlar */
     .alert-card {
-        background-color: #2b1214 !important;
-        border-left: 7px solid #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.08) !important;
+        border: 2px solid #ef4444 !important;
+        border-left: 8px solid #ef4444 !important;
         padding: 22px;
         border-radius: 12px;
         margin-top: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .alert-card h3 { color: #f87171 !important; margin-bottom: 8px; font-size: 22px !important; }
-    .alert-card p, .alert-card li { color: #f3f4f6 !important; font-size: 15px !important; line-height: 1.6; }
-    .alert-card b { color: #ffffff !important; }
-    .alert-card hr { border-color: rgba(239, 68, 68, 0.3) !important; margin: 12px 0; }
+    .alert-card h3 { color: #dc2626 !important; margin-bottom: 8px; font-size: 22px !important; }
     
-    /* Turuncu Uyarı Kartı (Pas Akarı) */
     .warning-card {
-        background-color: #2b1a0a !important;
-        border-left: 7px solid #f59e0b !important;
+        background-color: rgba(245, 158, 11, 0.08) !important;
+        border: 2px solid #f59e0b !important;
+        border-left: 8px solid #f59e0b !important;
         padding: 22px;
         border-radius: 12px;
         margin-top: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .warning-card h3 { color: #fbbf24 !important; margin-bottom: 8px; font-size: 22px !important; }
-    .warning-card p, .warning-card li { color: #f3f4f6 !important; font-size: 15px !important; line-height: 1.6; }
-    .warning-card b { color: #ffffff !important; }
-    .warning-card hr { border-color: rgba(245, 158, 11, 0.3) !important; margin: 12px 0; }
+    .warning-card h3 { color: #d97706 !important; margin-bottom: 8px; font-size: 22px !important; }
     
-    /* Yeşil Rapor Kartı (Sağlıklı) */
     .report-card {
-        background-color: #0d2415 !important;
-        border-left: 7px solid #22c55e !important;
+        background-color: rgba(34, 197, 94, 0.08) !important;
+        border: 2px solid #22c55e !important;
+        border-left: 8px solid #22c55e !important;
         padding: 22px;
         border-radius: 12px;
         margin-top: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .report-card h3 { color: #4ade80 !important; margin-bottom: 8px; font-size: 22px !important; }
-    .report-card p, .report-card li { color: #f3f4f6 !important; font-size: 15px !important; line-height: 1.6; }
-    .report-card b { color: #ffffff !important; }
-    .report-card hr { border-color: rgba(34, 197, 94, 0.3) !important; margin: 12px 0; }
+    .report-card h3 { color: #16a34a !important; margin-bottom: 8px; font-size: 22px !important; }
+    
+    .alert-card p, .warning-card p, .report-card p,
+    .alert-card li, .warning-card li, .report-card li {
+        font-size: 15px !important;
+        line-height: 1.6;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -135,8 +131,8 @@ if uploaded_image is not None and models_ready:
     orig_bgr = cv2.cvtColor(orig_rgb, cv2.COLOR_RGB2BGR)
     h, w = orig_bgr.shape[:2]
 
-    # Görselleri Ortalamak ve Boyutunu Kontrol Altına Almak İçin 4 Sütunlu Grid
-    _, col1, col2, _ = st.columns([0.2, 2, 2, 0.2])
+    # Tam Dengeli 2 Sütun (Artık yapraklar daralmayacak)
+    col1, col2 = st.columns([1, 1])
     with col1:
         st.image(image, caption="Girdi Görseli (Orijinal)", use_container_width=True)
 
@@ -155,23 +151,30 @@ if uploaded_image is not None and models_ready:
                 elif c_name in ['lession', 'lesion']:
                     cv2.fillPoly(lesion_mask, [poly], 255)
 
-        cnts, _ = cv2.findContours(leaf_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        cv2.drawContours(leaf_mask, cnts, -1, 255, -1)
+        # YAPRAK + LEKE BİR BÜTÜNDÜR (Lekenin yok olmasını önleyen anahtar hamle)
+        total_leaf_mask = cv2.bitwise_or(leaf_mask, lesion_mask)
+        cnts_leaf, _ = cv2.findContours(total_leaf_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(total_leaf_mask, cnts_leaf, -1, 255, -1)
 
-        # Leke maskesini SADECE yaprak sınırları içine kırp (Taşmaları ve %100 aşımını önler)
-        lesion_mask = cv2.bitwise_and(lesion_mask, lesion_mask, mask=leaf_mask)
-
-        leaf_area = max(1, np.count_nonzero(leaf_mask))
+        total_leaf_area = max(1, np.count_nonzero(total_leaf_mask))
         lesion_area = np.count_nonzero(lesion_mask)
-        severity_pct = min(100.0, (lesion_area / leaf_area) * 100) # Maksimum %100 sınırı
+        severity_pct = min(100.0, (lesion_area / total_leaf_area) * 100)
 
+        # Görselleştirme Katmanı
         overlay_rgb = orig_rgb.copy()
         if lesion_area > 0:
-            overlay_rgb[lesion_mask > 0] = [220, 20, 60] # Kırmızı Leke
-            cv2.drawContours(overlay_rgb, cnts, -1, (0, 255, 0), 2) # Yeşil Yaprak Sınırı
+            # Lekeyi canlı ve yarı-saydam kırmızı ile boya
+            overlay_rgb[lesion_mask > 0] = (overlay_rgb[lesion_mask > 0] * 0.35 + np.array([225, 29, 72]) * 0.65).astype(np.uint8)
+            # Lekenin etrafına kırmızı çizgi çek
+            cnts_lesion, _ = cv2.findContours(lesion_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            cv2.drawContours(overlay_rgb, cnts_lesion, -1, (220, 20, 60), 2)
 
-        clean_leaf = cv2.bitwise_and(orig_bgr, orig_bgr, mask=leaf_mask)
-        x, y, bw, bh = cv2.boundingRect(leaf_mask) if np.count_nonzero(leaf_mask) > 0 else (0, 0, w, h)
+        # Yaprağın tüm dış sınırına yeşil kontur çiz
+        cv2.drawContours(overlay_rgb, cnts_leaf, -1, (34, 197, 94), 3)
+
+        # Arka Plan Temizleme ve Kırpma (EfficientNet için)
+        clean_leaf = cv2.bitwise_and(orig_bgr, orig_bgr, mask=total_leaf_mask)
+        x, y, bw, bh = cv2.boundingRect(total_leaf_mask) if np.count_nonzero(total_leaf_mask) > 0 else (0, 0, w, h)
         pad = 10
         x1, y1 = max(0, x - pad), max(0, y - pad)
         x2, y2 = min(w, x + bw + pad), min(h, y + bh + pad)
@@ -200,7 +203,7 @@ if uploaded_image is not None and models_ready:
     st.write("---")
     st.subheader("📋 Teşhis Karnesi ve Zirai Mücadele Reçetesi")
 
-    if lesion_area > (leaf_area * 0.005):
+    if lesion_area > (total_leaf_area * 0.005):
         st.markdown(f"""
         <div class="alert-card">
             <h3>🔴 TEŞHİS: Halkalı Leke Hastalığı (<i>Venturia oleaginea</i>)</h3>
