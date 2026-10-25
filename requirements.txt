@@ -1,0 +1,7 @@
+streamlit
+ultralytics
+onnxruntime
+opencv-python-headless
+numpy
+pillow
+huggingface_hub
