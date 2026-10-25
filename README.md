@@ -65,9 +65,9 @@ Mevcut tarımsal sınıflandırma modelleri arka plandaki toprak, ahşap masa ve
 
 | Sınıf Etiketi | Bilimsel Adı | Türkçe Karşılığı | Mücadele Reçetesi |
 | :--- | :--- | :--- | :--- |
-| `olive_peacock_spot` | *Venturia oleaginea* | Halkalı Leke | 
-| `acerculus_olearius` | *Aculus olearius* | Zeytin Pas Akarı | 
-| `Healthy` | *Olea europaea* | Sağlıklı Yaprak |
+| `olive_peacock_spot` | *Venturia oleaginea* | Halkalı Leke | %1 - 1.5 Bordo Bulamacı / Bakırlı Fungisit |
+| `acerculus_olearius` | *Aculus olearius* | Zeytin Pas Akarı | Sürgün döneminde Islanabilir Kükürt (WP) / Akarisit |
+| `Healthy` | *Olea europaea* | Sağlıklı Yaprak | Rutin sulama, havalandırma budaması ve dengeli besleme |
 
 ---
 
